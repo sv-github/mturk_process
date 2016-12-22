@@ -3,6 +3,7 @@
 
 
 import os
+import glob
 import subprocess
 import natsort
 import shutil
@@ -63,7 +64,10 @@ for line in textLinesFull:
 if not os.path.isdir("chopped_audio_file"):
     print("Required directory 'chopped_audio_file' not found")
 else:
-    wavList = os.listdir("chopped_audio_file/")
+    #wavList = os.listdir("chopped_audio_file/")
+    wavList = glob.glob("chopped_audio_file/*.wav")  #only wav files
+    for j in range(len(wavList)): wavList[j]=wavList[j].replace("chopped_audio_file/","")
+    
     if wavList[0][0:3]== ".DS":
         del wavList[0]      # delete .DS_Store.  
                #Note files not alphabetically ordered. text files are then not written in order
@@ -98,10 +102,15 @@ for audIndex in range(len(wavList)):       # loop thru the wav files
         wav1End = wav1End - 100
     elif (wav1End > 1255) and (wav1End < 1500):
         wav1End = wav1End - 100
-    elif (wav1End > 2703) and (wav1End < 3940):    #### ended at this line for BP
-        wav1End = wav1End + 0
-    elif (wav1End > 3940) and (wav1End < 5000):
-        wav1End = wav1End + 0
+    elif (wav1End > 1500) and (wav1End < 1750):    #### ended at this line for BP
+        wav1End = wav1End - 150
+    elif (wav1End > 1750) and (wav1End < 2680):
+        wav1End = wav1End - 160
+    elif (wav1End > 2680) and (wav1End < 3575):
+        wav1End = wav1End - 110
+    elif (wav1End > 3575) and (wav1End < 5000):
+        wav1End = wav1End - 60
+        
 
         
     
@@ -204,10 +213,10 @@ for audIndex in range(len(wavList)):       # loop thru the wav files
 #for file in $(ls *wav):
 #    ffmpeg -i $file ${file%%.wav}.mp3
 
-
-for item in wavList:
-    subprocess.call(["ffmpeg", "-i", "chopped_audio_file/" + item, "chopped_audio_file/" + item.split(".wav")[0] + ".mp3" ])
-# output: 0  (no errors)   output: 1 (command exiting, does not overwrite)
+#
+#for item in wavList:
+#    subprocess.call(["ffmpeg", "-i", "chopped_audio_file/" + item, "chopped_audio_file/" + item.split(".wav")[0] + ".mp3" ])
+## output: 0  (no errors)   output: 1 (command exiting, does not overwrite)
 
 
 ### ------------------ make 4 parts directories  (after converting to mp3s)  -----------------------
